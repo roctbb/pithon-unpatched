@@ -21,21 +21,6 @@ def run(code, data, core_path = "pithon.core"):
             words = line.split('$')
             replace_dict[words[1]] = words[0]
 
-        module = 0
-        while module < len(modules) - 1:
-            if ' ' + modules[module] in code:
-                while ' ' + modules[module] in code:
-                    code = code.replace(" " + modules[module], '')
-                module = 0
-            else:
-                module += 1
-        while '__import__' in code:
-            code = code.replace('__import__', '')
-        while 'exec' in code:
-            code = code.replace('exec', '')
-        while 'eval' in code:
-            code = code.replace('eval', '')
-
         for command in replace_dict:
             if code.find(replace_dict[command]) != -1:
                 return "Неизвестная команда {0}".format(replace_dict[command]) 
@@ -46,7 +31,7 @@ def run(code, data, core_path = "pithon.core"):
             code = code.replace(command, replace_dict[command])
 
         code = code.replace('поплавок ', '')
-        filename = "tmp/"+str(uuid.uuid4())+".py"
+        filename = "/tmp/"+str(uuid.uuid4())+".py"
         with open(filename, 'w') as tfile:
             tfile.write(code)
         process = subprocess.Popen(['python3', filename], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
